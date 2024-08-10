@@ -16,6 +16,7 @@ function App() {
   let [device_rack, setDeviceRack] = useState();
   let [device_level, setDeviceLevel] = useState();
   let [device_slot, setDeviceSlot] = useState();
+  let [autoRotate, setAutoRotate] = useState(false);
 
   let addDevice = () => {
     setOtherDevices([...other_devices, [device_rack, device_level, device_slot]]);
@@ -99,9 +100,18 @@ function App() {
               <input type="button" value={"ADD"} onClick={() => {addDevice()}}/>
             </td>
           </tr>
+          <br/>
+          <tr>
+            <td>
+              Auto rotate?
+            </td>
+            <td>
+              <input type="checkbox" value={autoRotate} onChange={() => setAutoRotate(!autoRotate)}/>
+            </td>
+          </tr>
         </table>
       </div>
-      <RoomGrid numOfRacks={racks} levels={levels} slotsPerLevel={slots_per_level} data={data} otherDevices={other_devices}/>
+      <RoomGrid numOfRacks={racks} levels={levels} slotsPerLevel={slots_per_level} data={data} otherDevices={other_devices} autoRotate={autoRotate}/>
     </div>
   );
 }

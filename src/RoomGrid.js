@@ -169,7 +169,7 @@ export function RoomGrid(props) {
                     <mesh position={[props.slotsPerLevel*-2, props.levels*-2, (props.numOfRacks-1)*-10]}>
                         <Sections {...props}/>
                     </mesh>
-                    <OrbitControls keyEvents={true} keys={{UP: "KeyW", BOTTOM: "KeyS", LEFT: "KeyA", RIGHT: "KeyD"}} autoRotate={true} autoRotateSpeed={0.5}/>  
+                    <OrbitControls keyEvents={true} keys={{UP: "KeyW", BOTTOM: "KeyS", LEFT: "KeyA", RIGHT: "KeyD"}} autoRotate={props.autoRotate} autoRotateSpeed={0.5}/>  
                     {/* <Grid infiniteGrid={true} side={2} cellSize={1} sectionSize={1}/>   */}
                     </perspectiveCamera>
                     {/* <primitive object={new THREE.AxesHelper(3)}/> */}
