@@ -17,6 +17,7 @@ function App() {
   let [device_level, setDeviceLevel] = useState();
   let [device_slot, setDeviceSlot] = useState();
   let [autoRotate, setAutoRotate] = useState(false);
+  let [currentCameraView, setCurrentCameraView] = useState(1);
 
   let addDevice = () => {
     setOtherDevices([...other_devices, [device_rack, device_level, device_slot]]);
@@ -89,18 +90,13 @@ function App() {
             </td>
             <td>
               <input type="number" step={0.1} min={1} max={20} value={device_rack} id="section" placeholder="Section" onChange={(e) => setDeviceRack(e.target.value)}/>
-            </td>
-            <td>
               <input type="number" step={0.1} min={1} max={10} value={device_level} id="levels" placeholder="Level" onChange={(e) => setDeviceLevel(e.target.value)}/>
-            </td>
-            <td>
               <input type="number" step={0.1} min={1} max={18} value={device_slot} id="slots" placeholder="Slot" onChange={(e) => setDeviceSlot(e.target.value)}/>
             </td>
             <td>
               <input type="button" value={"ADD"} onClick={() => {addDevice()}}/>
             </td>
           </tr>
-          <br/>
           <tr>
             <td>
               Auto rotate?
@@ -109,9 +105,36 @@ function App() {
               <input type="checkbox" value={autoRotate} onChange={() => setAutoRotate(!autoRotate)}/>
             </td>
           </tr>
+          <br/>
+          {
+            Array.from({length: racks}, (_, index) => index+1).map((val) => {
+
+              if(val===racks+1) {
+                return (<tr>
+                  <td style={{textAlign: "center"}}>
+                    <input type="radio" id={`Camera-default`} name="camera" value={val} checked={currentCameraView==="default"} onChange={() => setCurrentCameraView("default")}/>
+                  </td>
+                  <td>
+                    Default cam
+                  </td>
+                </tr>)
+              }
+
+              return (
+                <tr>
+                  <td style={{textAlign: "center"}}>
+                    <input type="radio" id={`Camera-${val}`} name="camera" value={val} checked={currentCameraView===val} onChange={() => setCurrentCameraView(val)}/>
+                  </td>
+                  <td>
+                    Section {val} cam
+                  </td>
+                </tr>
+              )
+            })
+          }
         </table>
       </div>
-      <RoomGrid numOfRacks={racks} levels={levels} slotsPerLevel={slots_per_level} data={data} otherDevices={other_devices} autoRotate={autoRotate}/>
+      <RoomGrid numOfRacks={racks} levels={levels} slotsPerLevel={slots_per_level} data={data} otherDevices={other_devices} autoRotate={autoRotate} currentCameraView={currentCameraView}/>
     </div>
   );
 }

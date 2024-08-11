@@ -162,19 +162,21 @@ export function RoomGrid(props) {
 
     return (
         <div id="canvas-container" style={{height: "100vh", width: "100vw", boxSizing: "border-box"}}>
-                <Canvas fallback={<div>Not available</div>} frameloop='always' flat linear>
-                    <perspectiveCamera>
-                    <ambientLight />
-                    <pointLight position={[10, 10, 10]} />
-                    <mesh position={[props.slotsPerLevel*-2, props.levels*-2, (props.numOfRacks-1)*-10]}>
+            <Canvas fallback={<div>Not available</div>} frameloop='demand' flat linear>
+                <ambientLight/>
+                <mesh>
+                    <perspectiveCamera position={[-props.slotsPerLevel*(4.5/2), -props.levels*(3/2) - 3, -props.currentCameraView*20+10]} view={{enabled: true}}>
                         <Sections {...props}/>
-                    </mesh>
-                    <OrbitControls keyEvents={true} keys={{UP: "KeyW", BOTTOM: "KeyS", LEFT: "KeyA", RIGHT: "KeyD"}} autoRotate={props.autoRotate} autoRotateSpeed={0.5}/>  
-                    {/* <Grid infiniteGrid={true} side={2} cellSize={1} sectionSize={1}/>   */}
+                        <OrbitControls keyEvents={true} keys={{UP: "KeyW", BOTTOM: "KeyS", LEFT: "KeyA", RIGHT: "KeyD"}} autoRotate={props.autoRotate} autoRotateSpeed={0.5}/>  
                     </perspectiveCamera>
-                    {/* <primitive object={new THREE.AxesHelper(3)}/> */}
-                    {/* <primitive object={new THREE.GridHelper(Math.max(props.slotsPerLevel, props.numOfRacks)*10 + 10, 20)}/> */}
-                </Canvas>
+                </mesh>
+                {/* <Grid infiniteGrid={true} side={2} cellSize={1} sectionSize={1}/>   */}
+                {/* <primitive object={new THREE.AxesHelper(3)}/> */}
+                {/* <primitive object={new THREE.GridHelper(Math.max(props.slotsPerLevel, props.numOfRacks)*10 + 10, 20)}/>
+                <primitive object={new THREE.CameraHelper(new THREE.OrthographicCamera(50, 50, 30, 30, 10, 10))}/>   */}
+
+                {/* <primitive object={new THREE.CameraHelper(cam)}/> */}
+            </Canvas>
         </div>
     )
 }
