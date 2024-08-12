@@ -3,6 +3,11 @@ import { Canvas } from '@react-three/fiber'
 import { useMemo } from 'react';
 import * as THREE from 'three';
 
+const SPACE_BETWEEN_RACKS = 30;
+const SPACE_BETWEEN_LEVELS = 7;
+const SPACE_BETWEEN_SLOTS = 6;
+const SLOT_DIMENSIONS = [3, 0.5, 3];
+
 
 const TextSprite = ({
     message = "Hello World",
@@ -54,7 +59,6 @@ const TextSprite = ({
   };
   
 
-const SLOT_DIMENSIONS = [3, 0.5, 3]
 
 function Slot({ rackNo, level, slot, position, label="Hello world", ...props }) {
     // console.log("SLOTS", props);
@@ -76,7 +80,7 @@ function Slot({ rackNo, level, slot, position, label="Hello world", ...props }) 
 function Rack({ rackNo, levels, slotsPerLevel, ...props }) {
     const slots = [];
     const rods = [];
-    const rodHeight = levels * 3 + 0;
+    const rodHeight = levels * SPACE_BETWEEN_LEVELS + 0;
 
     // Generate Slots
     for (let i = 0; i < levels; i++) {
@@ -84,7 +88,7 @@ function Rack({ rackNo, levels, slotsPerLevel, ...props }) {
             slots.push(
                 <Slot
                 key={`slot-${i}-${j}`}
-                position={[j * 4.5, i * 3, 0]}
+                position={[j * SPACE_BETWEEN_SLOTS, i * SPACE_BETWEEN_LEVELS + SPACE_BETWEEN_LEVELS/2, 0]}
                 rackNo={rackNo}
                 level={i+1}
                 slot={j+1}
@@ -93,19 +97,19 @@ function Rack({ rackNo, levels, slotsPerLevel, ...props }) {
             );
 
             if(i===0){
-                slots.push(<TextSprite message={`Slot ${j+1}`} position={[j * 4.5, -3, 0]} backgroundColor='red' textColor='black' scale={[2,1,1]}/>)
+                slots.push(<TextSprite message={`Slot ${j+1}`} position={[j * SPACE_BETWEEN_SLOTS, -3, 0]} backgroundColor='red' textColor='black' scale={[2,1,1]}/>)
             }
 
         }
-        slots.push(<TextSprite message={`Level ${i+1}`} position={[slotsPerLevel * 4.5, i * 3, 0]} backgroundColor='red' textColor='black'/>)
+        slots.push(<TextSprite message={`Level ${i+1}`} position={[slotsPerLevel * SPACE_BETWEEN_SLOTS - SPACE_BETWEEN_SLOTS/8, i * SPACE_BETWEEN_LEVELS + SPACE_BETWEEN_LEVELS/2, 0]} backgroundColor='red' textColor='black'/>)
     }
 
     // Generate Rods
     const rodPositions = [
-        [-2, rodHeight / 2 - 0.75, -1.5],
-        [slotsPerLevel * 4.5 - 2.5, rodHeight / 2 - 0.75, -1.5],
-        [-2, rodHeight / 2 - 0.75, 1.5],
-        [slotsPerLevel * 4.5 - 2.5, rodHeight / 2 - 0.75, 1.5],
+        [-SPACE_BETWEEN_SLOTS/2, rodHeight / 2 - 0.75, -1.5],
+        [slotsPerLevel * SPACE_BETWEEN_SLOTS - SPACE_BETWEEN_SLOTS/2, rodHeight / 2 - 0.75, -1.5],
+        [-SPACE_BETWEEN_SLOTS/2, rodHeight / 2 - 0.75, 1.5],
+        [slotsPerLevel * SPACE_BETWEEN_SLOTS - SPACE_BETWEEN_SLOTS/2, rodHeight / 2 - 0.75, 1.5],
     ];
 
     rodPositions.forEach((pos, index) => {
@@ -118,9 +122,9 @@ function Rack({ rackNo, levels, slotsPerLevel, ...props }) {
     });
 
     rods.push(
-        <mesh key={`rach-top`} position={[(slotsPerLevel * 4.5)/2 - 2.25, levels*3 - 1, 0]}>
+        <mesh key={`rack-top`} position={[(slotsPerLevel * SPACE_BETWEEN_SLOTS)/2 - SPACE_BETWEEN_SLOTS/2, levels*SPACE_BETWEEN_LEVELS - 1, 0]}>
             <TextSprite message={`Section ${rackNo}`} position={[0, 1, 0]} backgroundColor='red' textColor='black'/>
-            <boxGeometry args={[slotsPerLevel*4.5, 0.5, 3]} />
+            <boxGeometry args={[slotsPerLevel*SPACE_BETWEEN_SLOTS, 0.5, 3]} />
             <meshStandardMaterial color="gray" />
         </mesh>   
     )
@@ -139,13 +143,13 @@ function Sections({numOfRacks, ...props}) {
     let racks = [];
 
     for(let i=0; i<numOfRacks; i++) {
-        racks.push(<group position={[0, 2, i*20]}>
+        racks.push(<group position={[0, 2, i*SPACE_BETWEEN_RACKS]}>
             <Rack rackNo={i+1} {...props}/>
         </group>)
     }
 
     props.otherDevices.forEach((v) => {
-        racks.push(<mesh position={[4.5*(v[2]-1), v[1]*3 - 1.5, (v[0]-1)*20]}>
+        racks.push(<mesh position={[SPACE_BETWEEN_SLOTS*(v[2]-1), v[1]*SPACE_BETWEEN_LEVELS - SPACE_BETWEEN_LEVELS/2 + 1, (v[0]-1)*SPACE_BETWEEN_RACKS]}>
             <boxGeometry args={[5, 2, 3]}/>
             <meshBasicMaterial color={"grey"}/>
         </mesh>);
@@ -165,7 +169,7 @@ export function RoomGrid(props) {
             <Canvas fallback={<div>Not available</div>} frameloop='demand' flat linear>
                 <ambientLight/>
                 <mesh>
-                    <perspectiveCamera position={[-props.slotsPerLevel*(4.5/2), -props.levels*(3/2) - 3, -props.currentCameraView*20+10]} view={{enabled: true}}>
+                    <perspectiveCamera position={[-props.slotsPerLevel*(SPACE_BETWEEN_SLOTS/2), -props.levels*(SPACE_BETWEEN_LEVELS/2), -props.currentCameraView*SPACE_BETWEEN_RACKS+SPACE_BETWEEN_RACKS/2]} view={{enabled: true}}>
                         <Sections {...props}/>
                         <OrbitControls keyEvents={true} keys={{UP: "KeyW", BOTTOM: "KeyS", LEFT: "KeyA", RIGHT: "KeyD"}} autoRotate={props.autoRotate} autoRotateSpeed={0.5}/>  
                     </perspectiveCamera>

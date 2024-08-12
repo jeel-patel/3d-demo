@@ -10,7 +10,7 @@ function App() {
 
   let [data, setData] = useState({});
   let [racks, setRacks] = useState(5);
-  let [levels, setLevels] = useState(5);
+  let [levels, setLevels] = useState(3);
   let [slots_per_level, setSlots] = useState(8);
   let [other_devices, setOtherDevices] = useState([]);
   let [device_rack, setDeviceRack] = useState();
